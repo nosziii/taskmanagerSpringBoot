@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.0.2/css/bootstrap.min.css">
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mt-5 mb-4">Task Manager</h1>
+
+    <form action="/addTask" method="post" class="mb-5">
+        <div class="mb-3">
+            <input type="text" name="name" placeholder="Task Name" required class="form-control">
+        </div>
+        <div class="mb-3">
+            <input type="text" name="description" placeholder="Task Description" required class="form-control">
+        </div>
+        <div class="mb-3">
+            <select name="priorityId" required class="form-select">
+                <option value="" disabled selected>Select Priority</option>
+                <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <input type="datetime-local" name="dueDate" required class="form-control">
+        </div>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.name}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.priority.name}"></td>
+            <td th:text="${task.dueDate}"></td>
+            <td>
+                <a th:href="@{/deleteTask/{taskId}(taskId=${task.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
